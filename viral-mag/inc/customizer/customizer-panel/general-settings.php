@@ -133,12 +133,12 @@ $wp_customize->add_control(new Viral_Mag_Upgrade_Info_Control($wp_customize, 'vi
     'section' => 'viral_mag_general_options_section',
     'label' => esc_html__('For more options,', 'viral-mag'),
     'choices' => array(
-        esc_html__('16+ animated preloaders', 'viral-mag'),
+        esc_html__('16 animated preloaders, or upload your own image', 'viral-mag'),
         esc_html__('Admin page custom logo', 'viral-mag')
     ),
     'priority' => 100,
-    'upgrade_text' => esc_html__('Upgrade to Pro', 'viral-mag'),
-    'upgrade_url' => 'https://hashthemes.com/wordpress-theme/viral-pro/?utm_source=wordpress&utm_medium=viral-mag-link&utm_campaign=viral-mag-upgrade',
+    'upgrade_text' => esc_html__('Unlock in Viral Pro', 'viral-mag'),
+    'upgrade_url' => viral_mag_upgrade_url('general-options', 'viral-mag-customizer'),
     'active_callback' => 'viral_mag_is_upgrade_notice_active'
 )));
 
@@ -172,8 +172,8 @@ $wp_customize->add_control(new Viral_Mag_Upgrade_Info_Control($wp_customize, 'vi
         esc_html__('Set custom normal & hover color', 'viral-mag')
     ),
     'priority' => 100,
-    'upgrade_text' => esc_html__('Upgrade to Pro', 'viral-mag'),
-    'upgrade_url' => 'https://hashthemes.com/wordpress-theme/viral-pro/?utm_source=wordpress&utm_medium=viral-mag-link&utm_campaign=viral-mag-upgrade',
+    'upgrade_text' => esc_html__('Unlock in Viral Pro', 'viral-mag'),
+    'upgrade_url' => viral_mag_upgrade_url('back-to-top', 'viral-mag-customizer'),
     'active_callback' => 'viral_mag_is_upgrade_notice_active'
 )));
 
@@ -198,10 +198,30 @@ $wp_customize->add_control(new Viral_Mag_Toggle_Control($wp_customize, 'viral_ma
 
 /* SEO SECTION */
 $wp_customize->add_section('viral_mag_seo_section', array(
-    'title' => esc_html__('SEO', 'viral-mag'),
+    'title' => esc_html__('SEO and Performance', 'viral-mag'),
     'panel' => 'viral_mag_general_settings_panel',
     'priority' => 1000
 ));
+
+$wp_customize->add_section(new Viral_Mag_Upgrade_Section($wp_customize, 'viral-mag-preloader-upgrade-section', array(
+    'title' => esc_html__('Preloader Settings', 'viral-mag'),
+    'panel' => 'viral_mag_general_settings_panel',
+    'priority' => 1001,
+    'upgrade_text' => esc_html__('Get Pro', 'viral-mag'),
+    'class' => 'ht--single-row ht--pro-row',
+    'upgrade_url' => viral_mag_upgrade_url('sec-preloader', 'viral-mag-customizer'),
+    'active_callback' => 'viral_mag_is_upgrade_notice_active'
+)));
+
+$wp_customize->add_section(new Viral_Mag_Upgrade_Section($wp_customize, 'viral-mag-toc-upgrade-section', array(
+    'title' => esc_html__('Table of Contents', 'viral-mag'),
+    'panel' => 'viral_mag_general_settings_panel',
+    'priority' => 1002,
+    'upgrade_text' => esc_html__('Get Pro', 'viral-mag'),
+    'class' => 'ht--single-row ht--pro-row',
+    'upgrade_url' => viral_mag_upgrade_url('sec-table-of-contents', 'viral-mag-customizer'),
+    'active_callback' => 'viral_mag_is_upgrade_notice_active'
+)));
 
 $wp_customize->add_setting('viral_mag_schema_markup', array(
     'sanitize_callback' => 'viral_mag_sanitize_checkbox',
@@ -214,3 +234,61 @@ $wp_customize->add_control(new Viral_Mag_Toggle_Control($wp_customize, 'viral_ma
     'label' => esc_html__('Schema.org Markup', 'viral-mag'),
     'description' => esc_html__('Enable Schema.org markup feature for your site. You can disable this option if if you use a SEO plugin.', 'viral-mag'),
 )));
+
+/* ============CONTEXTUAL UPSELLS & PRO TEASER SECTIONS============ */
+
+$wp_customize->add_setting('viral_mag_google_font_upgrade_text', array(
+    'sanitize_callback' => 'viral_mag_sanitize_text'
+));
+
+$wp_customize->add_control(new Viral_Mag_Upgrade_Info_Control($wp_customize, 'viral_mag_google_font_upgrade_text', array(
+    'section' => 'viral_mag_google_font_section',
+    'label' => esc_html__('For more font and icon control,', 'viral-mag'),
+    'choices' => array(
+        esc_html__('Switch off the icon libraries you do not use - they leave the page and the icon picker', 'viral-mag'),
+        esc_html__('Request only the Google font weights your site actually uses', 'viral-mag'),
+        esc_html__('Preconnect to the Google font hosts for a faster first paint', 'viral-mag')
+    ),
+    'priority' => 100,
+    'upgrade_text' => esc_html__('Unlock in Viral Pro', 'viral-mag'),
+    'upgrade_url' => viral_mag_upgrade_url('google-fonts', 'viral-mag-customizer'),
+    'active_callback' => 'viral_mag_is_upgrade_notice_active'
+)));
+
+$wp_customize->add_setting('viral_mag_seo_upgrade_text', array(
+    'sanitize_callback' => 'viral_mag_sanitize_text'
+));
+
+$wp_customize->add_control(new Viral_Mag_Upgrade_Info_Control($wp_customize, 'viral_mag_seo_upgrade_text', array(
+    'section' => 'viral_mag_seo_section',
+    'label' => esc_html__('For more SEO options,', 'viral-mag'),
+    'choices' => array(
+        esc_html__('NewsArticle structured data in JSON-LD with speakable markup', 'viral-mag'),
+        esc_html__('Google News sitemap so your posts get picked up faster', 'viral-mag'),
+        esc_html__('Speculative loading - the next article opens instantly', 'viral-mag'),
+        esc_html__('Print stylesheet for articles', 'viral-mag')
+    ),
+    'priority' => 100,
+    'upgrade_text' => esc_html__('Unlock in Viral Pro', 'viral-mag'),
+    'upgrade_url' => viral_mag_upgrade_url('seo', 'viral-mag-customizer'),
+    'active_callback' => 'viral_mag_is_upgrade_notice_active'
+)));
+
+$wp_customize->add_section(new Viral_Mag_Upgrade_Section($wp_customize, 'viral-mag-site-tools-upgrade-section', array(
+    'title' => esc_html__('GDPR & Maintenance', 'viral-mag'),
+    'priority' => 36,
+    'upgrade_text' => esc_html__('Get Pro', 'viral-mag'),
+    'class' => 'ht--single-row ht--pro-row',
+    'upgrade_url' => viral_mag_upgrade_url('sec-gdpr-maintenance', 'viral-mag-customizer'),
+    'active_callback' => 'viral_mag_is_upgrade_notice_active'
+)));
+
+$wp_customize->add_section(new Viral_Mag_Upgrade_Section($wp_customize, 'viral-mag-ads-upgrade-section', array(
+    'title' => esc_html__('Advertising & Monetization', 'viral-mag'),
+    'priority' => 35,
+    'upgrade_text' => esc_html__('Get Pro', 'viral-mag'),
+    'class' => 'ht--single-row ht--pro-row',
+    'upgrade_url' => viral_mag_upgrade_url('sec-advertising', 'viral-mag-customizer'),
+    'active_callback' => 'viral_mag_is_upgrade_notice_active'
+)));
+
