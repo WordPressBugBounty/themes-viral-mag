@@ -2,8 +2,6 @@
 /**
  * Custom functions that act independently of the theme templates
  *
- * Eventually, some of the functionality here could be replaced by core features
- *
  * @package Viral Mag
  */
 if (!function_exists('wp_body_open')) {
@@ -358,11 +356,7 @@ if (!function_exists('viral_mag_typography_css')) {
 }
 
 /**
- * Build a tracked Viral Pro upgrade URL.
- *
- * Every upsell link in the theme goes through this so each placement is
- * distinguishable in analytics. Without utm_content every prompt looks
- * identical in reports and there is no way to tell which one converts.
+ * Build a tracked Viral Pro upgrade URL; utm_content tells each placement apart in analytics.
  *
  * @param string $placement Short slug identifying where the link lives.
  * @param string $medium    utm_medium value.
@@ -383,14 +377,8 @@ function viral_mag_upgrade_url($placement = '', $medium = 'viral-mag-link') {
 }
 
 /**
- * Return the seasonal upgrade campaign running today, or false.
- *
- * Replaces hand-editing the banner title and shipping a release for every
- * sale. Date windows are month-day, so they repeat every year.
- *
- * 'badge', 'title' and 'button' replace the upgrade card's copy while a
- * window is open, and the card hides its list price. No prices or coupon
- * codes go here.
+ * Return the seasonal upgrade campaign running today, or false. Month-day windows repeat yearly;
+ * no prices or coupon codes here.
  *
  * @return array|false Campaign array, or false outside every window.
  */
@@ -436,4 +424,21 @@ function viral_mag_get_active_campaign() {
     }
 
     return false;
+}
+
+// Current year, swapped in for [display-year] in the copyright text.
+function viral_mag_current_year() {
+    return esc_html(date_i18n('Y'));
+}
+
+// Counts post views, used by the "Most Viewed" order of the Post Listing widget.
+add_action('template_redirect', 'viral_mag_set_post_view');
+
+function viral_mag_set_post_view() {
+    if (!is_singular('post') || is_preview() || is_customize_preview()) {
+        return;
+    }
+    $post_id = get_queried_object_id();
+    $count = (int) get_post_meta($post_id, 'post_views_count', true);
+    update_post_meta($post_id, 'post_views_count', $count + 1);
 }

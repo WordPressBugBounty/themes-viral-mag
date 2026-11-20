@@ -104,6 +104,50 @@ if (!class_exists('Viral_Mag_Welcome')):
             }
 
             $this->screen_notice('admin_notices');
+
+            $sale_key = $this->sale_notice_key();
+            if ($sale_key) {
+                $this->sale_notice($sale_key);
+            }
+        }
+
+        /* Dismiss key of the sale notice due on this screen, or '' when there is none. */
+        private function sale_notice_key() {
+            if (!function_exists('viral_mag_get_active_campaign') || !current_user_can('manage_options')) {
+                return '';
+            }
+
+            // The settings page shows the same banner at the top.
+            $screen = function_exists('get_current_screen') ? get_current_screen() : null;
+            if ($screen && 'toplevel_page_viral-mag-welcome' === $screen->id) {
+                return '';
+            }
+
+            $campaign = viral_mag_get_active_campaign();
+            if (!$campaign || empty($campaign['image'])) {
+                return '';
+            }
+
+            // One key per sale and year, so the next sale shows again. A window that crosses New Year counts from its start year.
+            $year = (int) current_time('Y');
+            if ($campaign['end'] < $campaign['start'] && current_time('m-d') <= $campaign['end']) {
+                $year--;
+            }
+            $key = sanitize_key('sale-' . $campaign['id'] . '-' . $year);
+
+            return $this->is_dismissed($key) ? '' : $key;
+        }
+
+        public function sale_notice($key) {
+            $campaign = viral_mag_get_active_campaign();
+            ?>
+            <div class="notice viral-mag-sale-notice">
+                <?php $this->dismiss_button($key); ?>
+                <a href="<?php echo esc_url(viral_mag_upgrade_url('admin-notice-' . $campaign['id'], 'viral-mag-admin-notice')); ?>" target="_blank">
+                    <img src="<?php echo esc_url(get_template_directory_uri() . '/welcome/css/' . $campaign['image']); ?>" alt="<?php echo esc_attr($campaign['title']); ?>">
+                </a>
+            </div>
+            <?php
         }
 
         public function welcome_notice() {
@@ -411,11 +455,7 @@ if (!class_exists('Viral_Mag_Welcome')):
 
 
         /**
-         * Renders the widgets-screen prompt.
-         *
-         * The block-based widget editor drops everything hooked to
-         * admin_notices, so that screen is served from in_admin_header
-         * instead, which fires outside the editor's root element.
+         * Renders the widgets-screen prompt, on in_admin_header as the block editor drops admin_notices.
          *
          * @return void
          */
@@ -475,12 +515,8 @@ if (!class_exists('Viral_Mag_Welcome')):
         }
 
         /**
-         * Widgets prompt for the block-based widget editor.
-         *
-         * That screen discards markup from admin_notices and in_admin_header
-         * alike, so the notice is pushed into the editor's core/notices store.
-         * Built with add_query_arg rather than wp_nonce_url because that helper
-         * HTML-escapes its return value, which would break the nonce here.
+         * Widgets prompt for the block-based widget editor, pushed into its core/notices store.
+         * Uses add_query_arg, not wp_nonce_url, whose &amp; would break the nonce.
          *
          * @return void
          */

@@ -5,7 +5,7 @@ Viral Mag is distributed under the terms of the GNU GPL v2 or later.
 Contributors: hashthemes
 Requires at least: 6.3
 Tested up to: 7.1
-Stable tag: 2.2.0
+Stable tag: 2.2.1
 Requires PHP: 7.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -19,6 +19,15 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 
 == Changelog ==
+= 2.2.1 - Nov 19, 2026 =
+* Customizer upgrade box made smaller: the price is in the button, and the feature list is removed - Changed
+* Seasonal sale banner on the admin screens during a sale, which can be closed - Added
+* Customizer colour picker redesigned: one card with the picker on top and the hex field below - Changed
+* Code comments shortened, and unused commented-out code removed - Changed
+* Customizer font weight lookup limited to administrators - Fixed
+* Customizer upgrade notes list the 1-site and unlimited-site prices - Changed
+* [display-year] in the footer copyright text now shows the current year - Fixed
+
 = 2.2.0 - Nov 16, 2026 =
 * Settings page redesigned, with a compact header, a Viral Pro card, clearer tabs, a setup checklist, Customizer shortcuts and rewritten help text - Changed
 * Spotlight and The Wellness Journal Viral Pro demos on the Settings page and in the demo importer, for 19 Viral Pro demos - Added
